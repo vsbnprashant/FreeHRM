@@ -1,0 +1,76 @@
+th.orderable.desc::after {
+content: '\2193';
+}
+
+th.orderable.asc::after {
+content: '\2191';
+}
+
+li.breadcrumb-item{
+text-transform: capitalize;
+}
+
+.prashsidebar {
+ position: sticky;
+    top: 0; /* Set to the top of the viewport */
+    height: 100vh; /* Optional: makes the sidebar full height */
+    width: 250px; /* Set your desired width */
+    overflow-y: auto; /* Enables scrolling within the sidebar if content is long */
+}
+
+.smallmenuitem {
+    margin-left: 1em;
+    font-size:medium;
+}
+
+.smallmenuitem::before {
+    content: "\2192";
+    padding-right: 5px; /* Optional: adds some spacing between the arrow and the menu item text */
+}
+
+/** Mark all fields as required **/
+input[required] {
+    background-color: honeydew;
+}
+
+form .form-control[required] {
+    background-color: honeydew;
+}
+
+/* Highlight invalid fields in red with a border */
+.invalid-field {
+   /* border: 2px solid red !important;*/
+   background-color: #ffe0e0 !important;
+}
+
+
+
+.button-float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#0C9;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+	font-size: 38px;
+}
+
+.my-float{
+	margin-top:22px;
+}
+
+#sidebar_prash[hidden] {
+  display: block;
+  visibility: visible;
+  opacity: 0;
+}
+#sidebar_prash:not([hidden]) {
+  opacity: 1;
+}
+#sidebar_prash {
+  transition: opacity 0.4s ease-in-out;
+}

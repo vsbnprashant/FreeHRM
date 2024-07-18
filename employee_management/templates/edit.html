@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+  <form method="POST" action="{% if location.id %}{% url 'locations_edit' location.id %}{% else %}{% url 'locations_create' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+        <div class="mb-4">
+            <h3>{% if location.id %}Update Details #{{location.id}} {% else %}Create Location{% endif %}</h3>
+        </div>
+
+        {% if location.id %}
+        <div class="form-group row mb-4">
+            <label for="id_locid" class="col-sm-2 col-form-label">Location Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_locid" required maxlength="20" value="{{ location.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group row mb-4">
+            <label for="id_location" class="col-sm-2 col-form-label">Location Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="location" id="id_location" required maxlength="128" value="{{ location.location }}" placeholder="Enter the location name">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_cost_center" class="col-sm-2 col-form-label">Cost Center:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="cost_center" id="id_cost_center" maxlength="128" value="{{ location.cost_center }}" placeholder="Enter the cost center code">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_status" class="col-sm-2 col-form-label">Status:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="status" id="id_status" maxlength="128" value="{{ location.status }}" placeholder="Current status of the location">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_country" class="col-sm-2 col-form-label">Country:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="country" id="id_country" maxlength="128" value="{{ location.country }}" placeholder="Country where the location is based">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_city" class="col-sm-2 col-form-label">City:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="city" id="id_city" maxlength="128" value="{{ location.city }}" placeholder="City of the location">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_person_in_charge" class="col-sm-2 col-form-label">Person in Charge:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="person_in_charge" id="id_person_in_charge" maxlength="128" value="{{ location.person_in_charge }}" placeholder="Name of the person in charge">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <div class="col-sm-10 offset-sm-2">
+                {% if location.id and perms.employee_management.change_location %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.employee_management.add_location %}
+                <button type="submit" class="btn btn-success">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+        {% endif %}
+    </div>
+</form>
+
+{% endblock %}

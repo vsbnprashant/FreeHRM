@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Settings
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="main container">
+    <h1 class="mb-4">Settings</h1>
+    <div class="row">
+        {% if perms.settings.view_companysettings %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-cogs"></i> Company Settings</h5>
+                    <p class="card-text">Check out our company settings.</p>
+                    <a href="{% url 'edit_company_settings_url' %}" class="btn btn-primary">Edit Company Settings</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if perms.settings.view_companypayrollsettings %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-money-bill"></i> Company Payroll Settings</h5>
+                    <p class="card-text">Check out our company payroll settings.</p>
+                    <a href="{% url 'edit_company_payroll_settings_url' %}" class="btn btn-primary">Edit Company Payroll Settings</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if perms.settings.view_companytimesheets %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-clock"></i> Company Timesheets</h5>
+                    <p class="card-text">Check out our company timesheets.</p>
+                    <a href="{% url 'edit_company_timesheets_settings_url' %}" class="btn btn-primary">Edit Company Timesheets</a>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+
+
+        {% if perms.settings.view_payrollgroup %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users"></i> Payroll Groups</h5>
+                    <p class="card-text">Check out our payroll groups.</p>
+                    <a href="{% url 'payrollgroup_list' %}" class="btn btn-primary">View Payroll Groups</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if perms.settings.view_workingcalendar %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-calendar"></i> Working Calendars</h5>
+                    <p class="card-text">Check out our working calendars.</p>
+                    <a href="{% url 'workingcalendar_list_url' %}" class="btn btn-primary">View Working Calendars</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if perms.settings.view_department %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-building"></i> Departments</h5>
+                    <p class="card-text">Check out our departments.</p>
+                    <a href="{% url 'department_list_url' %}" class="btn btn-primary">View Departments</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if perms.settings.view_companycontact %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-address-book"></i> Company Contacts</h5>
+                    <p class="card-text">Check out our company contacts.</p>
+                    <a href="{% url 'companycontact_list_url' %}" class="btn btn-primary">View Company Contacts</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if perms.settings.view_companybankaccount %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-piggy-bank"></i> Company Bank Accounts</h5>
+                    <p class="card-text">Check out our company bank accounts.</p>
+                    <a href="{% url 'companybankaccount_list_url' %}" class="btn btn-primary">View Company Bank Accounts</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if perms.settings.view_paymentelement %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-calculator"></i> Payment Elements</h5>
+                    <p class="card-text">Check out our payment elements.</p>
+                    <a href="{% url 'paymentelement_list_url' %}" class="btn btn-primary">View Payment Elements</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+
+{% endblock %}
+

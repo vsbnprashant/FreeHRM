@@ -1,0 +1,14 @@
+<!-- department_list.html -->
+{% for department in departments %}
+    <li>
+        {{ department.name }}
+        {% if perms.settings.view_department %} <a href="{% url "department_edit_url" department.id %}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-earmark"></i></a> {% endif %}
+        {% if perms.settings.delete_department %} <a onclick="return confirm(\'Are you sure you want to delete this item?\');" href="{% url "department_delete_url" department.id %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a> {% endif %}
+
+        {% if department.get_children %}
+            <ul>
+                {% include "department_list.html" with departments=department.get_children %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}

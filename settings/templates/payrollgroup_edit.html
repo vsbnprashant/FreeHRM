@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+ <form method="POST" action="{% if payrollgroup.id %}{% url 'payrollgroup_edit' payrollgroup.id %}{% else %}{% url 'payrollgroup_create' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+        <div class="mb-4">
+            <h3>{% if payrollgroup.id %}Update Details #{{payrollgroup.id}} {% else %}Create Payroll Group{% endif %}</h3>
+        </div>
+
+        {% if payrollgroup.id %}
+        <div class="form-group row mb-4"> <!-- Added mb-4 here -->
+            <label for="id_payrollgroupid" class="col-sm-2 col-form-label">Payroll Group Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_payrollgroupid" required maxlength="20" value="{{ payrollgroup.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group row mb-4"> <!-- Added mb-4 here -->
+            <label for="id_name" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name" id="id_name" required maxlength="128" value="{{ payrollgroup.name }}" placeholder="Enter payroll group name">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4"> <!-- Added mb-4 here -->
+            <label for="id_description" class="col-sm-2 col-form-label">Description:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="description" id="id_description" maxlength="128" value="{{ payrollgroup.description }}" placeholder="Briefly describe the group">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4"> <!-- Added mb-4 here -->
+            <div class="col-sm-10 offset-sm-2">
+                {% if payrollgroup.id and perms.settings.change_payrollgroup %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.settings.add_payrollgroup %}
+                <button type="submit" class="btn btn-primary">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger mb-4"> <!-- Added mb-4 here -->
+            {{ form.errors }}
+        </div>
+        {% endif %}
+    </div>
+</form>
+
+{% endblock %}

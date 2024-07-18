@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% if workingcalendar.id %}{% url 'workingcalendar_edit_url' workingcalendar.id %}{% else %}{% url 'workingcalendar_create_url' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+
+        <div class="mb-4">
+            <h3>{% if workingcalendar.id %}Update Details #{{workingcalendar.id}} {% else %}Create Working Calendar{% endif %}</h3>
+        </div>
+
+         {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+
+        {% if workingcalendar.id %}
+        <div class="form-group row mb-3">
+            <label for="id_workingcalendarid" class="col-sm-2 col-form-label">Working Calendar Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_workingcalendarid" required maxlength="64"
+                       value="{{ workingcalendar.id }}" readonly/>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group row mb-3">
+            <label for="id_name" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name" id="id_name" required maxlength="128"
+                       value="{{ workingcalendar.name }}" placeholder="Name of the working calendar"/>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <!-- Days and times inputs enhanced for clarity and structure -->
+
+        <div class="container px-4" style="margin:20px; margin-top: 50px; margin-bottom: 50px;">
+
+            <div class="form-group row mb-3">
+            <p class="h5">Normal Working Days</p>
+            </div>
+
+         <div class="form-group row mb-3">
+        <label class="col-sm-2 col-form-label">Day</label>
+
+	   <div class="col-sm-1">
+		Is a working day?
+        </div>
+        <div class="col-sm-2">
+           Start Time
+        </div>
+        <div class="col-sm-2">
+        End Time
+        </div>
+        <div class="col-sm-1">
+        Overtime
+        </div>
+        </div>
+
+
+
+        {% for day in days %}
+    <div class="form-group row mb-3">
+        <label class="col-sm-2 col-form-label">{{ day }}:</label>
+        <div class="col-sm-1">
+           {% load custom_filters %}
+
+
+<input type="checkbox" class="form-check-input"
+       name="{{ day|lower }}_working"
+       id="id_{{ day|lower }}_working"
+       {% if workingcalendar.id and workingcalendar|is_working_checked:day %}checked{% endif %}>
+
+
+        </div>
+        <div class="col-sm-2">
+               <input type="time" class="form-control" name="{{ day|lower }}_start_time" id="id_{{ day|lower }}_start_time"
+           value="{% if workingcalendar.id %}{{ workingcalendar|get_start_time_attr:day }}{% else %}08:00{% endif %}"/>
+        </div>
+        <div class="col-sm-2">
+            <input type="time" class="form-control" name="{{ day|lower }}_end_time" id="id_{{ day|lower }}_end_time"
+           value="{% if workingcalendar.id %}{{ workingcalendar|get_end_time_attr:day }}{% else %}17:00{% endif %}"/>
+        </div>
+        <div class="col-sm-1">
+         {% load custom_filters %}
+
+
+<input type="checkbox" class="form-check-input"
+       name="{{ day|lower }}_overtime"
+       id="id_{{ day|lower }}_overtime"
+       {% if workingcalendar.id and workingcalendar|is_overtime_checked:day %}checked{% endif %}>
+
+
+        </div>
+    </div>
+{% endfor %}
+
+
+            </div>
+
+
+
+
+            <!-- Lateness -->
+            <div class="form-group row mb-3" style="margin-top:50px">
+            <p class="h5">Lateness</p>
+            </div>
+
+
+
+        <div class="form-group row mb-3">
+            <label for="id_lateness_minimum_minutes" class="col-sm-4 col-form-label">Maximum Permissible Delay in Minutes:</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" name="lateness_minimum_minutes" id="id_lateness_minimum_minutes" min="0"
+                       value="{% if workingcalendar.id %}{{ workingcalendar.lateness_minimum_minutes }}{% else %}0{% endif %}" />
+            </div>
+        </div>
+
+
+           <!-- Overtime -->
+            <div class="form-group row mb-3" style="margin-top:50px">
+            <p class="h5">Overtime</p>
+            </div>
+
+        <div class="form-group row mb-3">
+            <label for="id_overtime_minimum_minutes" class="col-sm-4 col-form-label">Minimum Time to be counted as Overtime(Mins):</label>
+            <div class="col-sm-2">
+                <input type="number" class="form-control" name="overtime_minimum_minutes" id="id_overtime_minimum_minutes" min="0"
+                       value="{% if workingcalendar.id %}{{ workingcalendar.overtime_minimum_minutes }}{% else %}0{% endif %}" />
+            </div>
+
+            <label for="id_overtime_deduct_lateness" class="col-sm-4 col-form-label">Deduct Lateness from Overtime?:</label>
+            <div class="col-sm-2">
+                <input type="checkbox" class="form-check-input" name="overtime_deduct_lateness" id="id_overtime_deduct_lateness" {% if workingcalendar.id and workingcalendar.overtime_deduct_lateness %}checked{% endif %}>
+            </div>
+        </div>
+
+
+        <div class="form-group row mb-3">
+            <label for="id_overtime_minimum_arrival_minutes" class="col-sm-4 col-form-label">Minimum Time Advance Arrival to count as OT before Working hours(Mins):</label>
+            <div class="col-sm-2">
+                <input type="number" min="0" class="form-control" name="overtime_minimum_arrival_minutes" id="id_overtime_minimum_arrival_minutes" value="{% if workingcalendar.id %}{{ workingcalendar.overtime_minimum_arrival_minutes }}{% else %}0{% endif %}"/>
+            </div>
+        </div>
+
+
+         <div class="form-group row mb-3">
+            <label for="id_overtime_after_hours_break" class="col-sm-4 col-form-label">After Hours break to be deducted from Overtime hours(Mins):</label>
+            <div class="col-sm-2">
+            <input name="overtime_after_hours_break" id="id_overtime_after_hours_break" type="number" class="form-control"
+                       min="0"
+                       value="{% if workingcalendar.id %}{{ workingcalendar.overtime_after_hours_break }}{% else %}0{% endif %}"/>
+            </div>
+
+
+            <label for="id_overtime_after_mins" class="col-sm-1 col-form-label">After(Mins):</label>
+            <div class="col-sm-1">
+            <input name="overtime_after_mins" id="id_overtime_after_mins" type="number" class="form-control"
+                       min="0"
+                        value="{% if workingcalendar.id %}{{ workingcalendar.overtime_after_mins }}{% else %}0{% endif %}"/>
+          </div>
+        </div>
+
+
+
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];  // Adjust days according to your needs
+
+    days.forEach(day => {
+        const checkbox = document.getElementById(`id_${day}_working`);
+        const startTime = document.getElementById(`id_${day}_start_time`);
+        const endTime = document.getElementById(`id_${day}_end_time`);
+
+        checkbox.addEventListener('change', function () {
+            if (checkbox.checked) {
+                startTime.setAttribute('required', true);
+                endTime.setAttribute('required', true);
+            } else {
+                startTime.removeAttribute('required');
+                endTime.removeAttribute('required');
+                startTime.value = '';
+                endTime.value = '';
+            }
+        });
+
+        // Validate that end time is after start time
+        function validateTimes() {
+            if (startTime.value && endTime.value && endTime.value <= startTime.value) {
+                alert('End time must be later than start time.');
+                endTime.value = '';  // Clear the invalid end time
+                endTime.focus();  // Optionally, refocus the end time input for immediate correction
+            }
+        }
+
+        startTime.addEventListener('change', validateTimes);
+        endTime.addEventListener('change', validateTimes);
+    });
+});
+
+        </script>
+
+
+
+        <!-- Additional settings -->
+        <!-- More fields here -->
+
+        <div class="form-group row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                {% if workingcalendar.id and perms.settings.change_workingcalendar %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.settings.add_workingcalendar %}
+                <button type="submit" class="btn btn-success">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+</form>
+
+{% endblock %}

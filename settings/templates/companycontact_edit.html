@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% if companycontact.id %}{% url 'companycontact_edit_url' companycontact.id %}{% else %}{% url 'companycontact_create_url' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+         {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h3>{% if companycontact.id %}Update Details #{{companycontact.id}} {% else %}Create Company Contact{% endif %}</h3>
+        </div>
+
+        {% if companycontact.id %}
+        <div class="form-group row mb-4">
+            <label for="id_companycontactid" class="col-sm-2 col-form-label">Company Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_companycontactid" required maxlength="20" value="{{ companycontact.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+            <div class="form-group row mb-3">
+            <label for="id_name" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name" id="id_name" required maxlength="255"
+                       value="{{ companycontact.name }}" placeholder="Name of the company"/>
+            </div>
+        </div>
+
+                    <div class="form-group row mb-3">
+            <label for="id_position" class="col-sm-2 col-form-label">Position:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="position" id="id_position" required maxlength="128"
+                       value="{{ companycontact.position }}" placeholder="Position(Director, Seceratary)"/>
+            </div>
+        </div>
+
+
+                    <div class="form-group row mb-3">
+            <label for="id_address_line1" class="col-sm-2 col-form-label">Address Line 1:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="address_line1" id="id_address_line1" required maxlength="255"
+                       value="{{ companycontact.address_line1 }}" placeholder="Address Line 1"/>
+            </div>
+        </div>
+
+              <div class="form-group row mb-3">
+            <label for="id_address_line2" class="col-sm-2 col-form-label">Address Line 2:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="address_line2" id="id_address_line2" required maxlength="255"
+                       value="{{ companycontact.address_line2 }}" placeholder="Address Line 2"/>
+            </div>
+        </div>
+
+                      <div class="form-group row mb-3">
+            <label for="id_phone" class="col-sm-2 col-form-label">Phone:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="phone" id="id_phone" required maxlength="128"
+                       value="{{ companycontact.phone }}" placeholder="Phone"/>
+            </div>
+        </div>
+
+                             <div class="form-group row mb-3">
+            <label for="id_city" class="col-sm-2 col-form-label">City:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="city" id="id_city" required maxlength="128"
+                       value="{{ companycontact.city }}" placeholder="City"/>
+            </div>
+        </div>
+
+                                  <div class="form-group row mb-3">
+            <label for="id_email" class="col-sm-2 col-form-label">Email Address:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" name="email" id="id_email" required maxlength="254"
+                       value="{{ companycontact.email }}" placeholder="abc@yourcompany.com"/>
+            </div>
+        </div>
+
+
+                                      <div class="form-group row mb-3">
+            <label for="id_latitude" class="col-sm-2 col-form-label">Latitude:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="latitude" id="id_latitude"
+                       value="{{ companycontact.latitude }}"/>
+            </div>
+        </div>
+
+                                              <div class="form-group row mb-3">
+            <label for="id_longitude" class="col-sm-2 col-form-label">Longitude:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="longitude" id="id_longitude"
+                       value="{{ companycontact.longitude }}"/>
+            </div>
+        </div>
+
+                                                    <div class="form-group row mb-3">
+            <label for="id_distance_range" class="col-sm-2 col-form-label">Distance Range(m):</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="distance_range" id="id_distance_range"
+                       value="{{ companycontact.distance_range }}"/>
+            </div>
+        </div>
+
+
+
+                                                    <div class="form-group row mb-3">
+            <label for="id_primary" class="col-sm-2 col-form-label">Primary:</label>
+            <div class="col-sm-10">
+                <input type="checkbox" class="form-control form-check-input" name="primary" id="id_primary" role="switch"
+                {% if companycontact.id and companycontact.primary %}checked{% endif %}
+                />
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group row mb-4">
+            <div class="col-sm-10 offset-sm-2">
+                {% if companycontact.id and perms.settings.change_companycontact %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.settings.add_companycontact %}
+                <button type="submit" class="btn btn-success">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+</form>
+{% endblock %}

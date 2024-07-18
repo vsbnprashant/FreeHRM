@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% if paymentelement.id %}{% url 'paymentelement_edit_url' paymentelement.id %}{% else %}{% url 'paymentelement_create_url' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+                {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h3>{% if paymentelement.id %}Update Details #{{paymentelement.id}} {% else %}Create Payment Element{% endif %}</h3>
+        </div>
+
+        {% if paymentelement.id %}
+        <div class="form-group row mb-4">
+            <label for="id_paymentelementid" class="col-sm-2 col-form-label">Payment Element Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_paymentelementid" required maxlength="20" value="{{ paymentelement.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+
+         <div class="form-group row mb-4">
+            <label for="id_code" class="col-sm-2 col-form-label">Code:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="code" id="id_code" required maxlength="100" value="{{ paymentelement.code }}" placeholder="Something like OVERTIME">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_title" class="col-sm-2 col-form-label">Title:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="title" id="id_title" required maxlength="200" value="{{ paymentelement.title }}" placeholder="Something like...Overtime Element ">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_formula" class="col-sm-2 col-form-label">Formula:</label>
+            <div class="col-sm-10">
+                <textarea required class="form-control" name="formula" id="id_formula" placeholder="Provide the Python code for the calculation">{{ paymentelement.formula }}</textarea>
+            </div>
+        </div>
+
+                <div class="form-group row mb-4">
+            <label for="id_order" class="col-sm-2 col-form-label">Order:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="order" id="id_order" required value="{{ paymentelement.order }}" placeholder="e.g. 5">
+            </div>
+        </div>
+
+         <div class="form-group row mb-4">
+            <label for="id_version" class="col-sm-2 col-form-label">
+                   {% if not paymentelement.id %}
+
+                Version:
+            {% else %}
+                *New Version after Saving (Current is {{ paymentelement.version}}) :
+                {% endif %}
+
+
+            </label>
+            <div class="col-sm-10">
+
+              <input type="number" class="form-control" name="version" id="id_version" required readonly
+                  {% if paymentelement.id %}
+                  value="{{ paymentelement.version|add:'1' }}"
+                    {% else %}
+                  value = '1'
+                  {% endif %}
+           >
+               </div>
+        </div>
+
+
+
+        {% if paymentelement.id %}
+        <!-- origin -->
+        {% endif %}
+
+
+        <div class="form-group row mb-4">
+            <div class="col-sm-10 offset-sm-2">
+                {% if paymentelement.id and perms.settings.change_paymentelement %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.settings.add_paymentelement %}
+                <button type="submit" class="btn btn-success">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+</form>
+{% endblock %}

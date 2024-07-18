@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+
+{% block title %}
+Departments View
+{% endblock %}
+
+{% block content %}
+
+
+<!-- department_tree.html -->
+<h2>Department Tree</h2>
+<ul>
+    {% include "department_list.html" with departments=departments %}
+</ul>
+
+
+{% endblock %}

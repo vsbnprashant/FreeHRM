@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% url 'edit_company_settings_url' %}">
+    {% csrf_token %}
+    <div class="container mt-4">
+         {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h3>Manage Company Settings</h3>
+        </div>
+
+
+            <div class="form-group row mb-3">
+            <label for="id_name" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name" id="id_name" required maxlength="255"
+                       value="{{ companysettings.name }}" placeholder="Name of the company"/>
+            </div>
+        </div>
+
+
+        <div class="form-group row mb-3">
+            <label for="id_shortname" class="col-sm-2 col-form-label">Short Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="shortname" id="id_shortname" required maxlength="128"
+                       value="{{ companysettings.shortname }}" placeholder="Short Name for the Company"/>
+            </div>
+        </div>
+
+
+
+
+                    <div class="form-group row mb-3">
+            <label for="id_tan" class="col-sm-2 col-form-label">TAN:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="tan" id="id_tan" required maxlength="32"
+                       value="{{ companysettings.tan }}" placeholder="Tax Account Number"/>
+            </div>
+        </div>
+
+
+           <div class="form-group row mb-3">
+            <label for="id_npf" class="col-sm-2 col-form-label">National Pension Fund number:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="npf" id="id_npf" required maxlength="32"
+                       value="{{ companysettings.npf }}" placeholder="NPF Number"/>
+            </div>
+        </div>
+
+
+          <div class="form-group row mb-3">
+            <label for="id_brn" class="col-sm-2 col-form-label">Business Registration Number:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="brn" id="id_brn" required maxlength="32"
+                       value="{{ companysettings.brn }}" placeholder="Business Registration Number"/>
+            </div>
+        </div>
+
+
+
+              <div class="form-group row mb-3">
+            <label for="id_nature" class="col-sm-2 col-form-label">Nature of Business:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="nature_of_business" id="id_nature" required maxlength="32"
+                       value="{{ companysettings.nature_of_business }}" placeholder="Nature of Business"/>
+            </div>
+        </div>
+
+
+
+            <div class="form-group row mb-3">
+    <label for="id_incorporation_date" class="col-sm-2 col-form-label">Incorporation Date:</label>
+    <div class="col-sm-10">
+        <input type="date" class="form-control" name="incorporation_date" id="id_incorporation_date" required
+               value="{{ companysettings.incorporation_date|date:'Y-m-d' }}" placeholder="Incorporation Date"
+               required />
+    </div>
+</div>
+
+
+
+
+
+
+ <div class="form-group row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                {% if perms.settings.change_companysettings %}
+                <button type="submit" class="btn btn-success">Save settings</button>
+                {% endif %}
+            </div>
+        </div>
+
+
+        </div>
+
+</form>
+
+{% endblock %}

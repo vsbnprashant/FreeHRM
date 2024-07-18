@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}
+    Add Leave Balance
+{% endblock %}
+
+{% block content %}
+
+
+<form method="post">
+    {% csrf_token %}
+    <div class="container mt-4">
+        <!-- Display non-field errors -->
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for error in form.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+
+            {% for field in form %}
+
+               {% if field.errors %}
+                          <li>{{ field.errors }}</li>
+
+                    {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+
+        <div class="mb-4">
+            <h3>Add/Edit Loan for {{ employee_file }}</h3>
+        </div>
+
+
+                 <div class="form-group row mb-3">
+            <label for="id_employee_loan_code" class="col-sm-2 col-form-label">Employee Loan Code:</label>
+            <div class="col-sm-10">
+                <input type="text" maxlength="15" class="form-control" name="employee_loan_code" id="id_employee_loan_code" required
+                       value="{{ loan.employee_loan_code }}" />
+            </div>
+        </div>
+
+
+          <div class="form-group row mb-3">
+            <label for="id_loan_amount" class="col-sm-2 col-form-label">Loan Amount:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="loan_amount" id="id_loan_amount"
+                       value="{% if loan.id %}{{ loan.loan_amount }}{% else %}0{% endif %}" />
+            </div>
+        </div>
+
+
+          <div class="form-group row mb-3">
+            <label for="id_loan_charges" class="col-sm-2 col-form-label">Loan Charges:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="loan_charges" id="id_loan_charges"
+                       value="{% if loan.id %}{{ loan.loan_charges }}{% else %}0{% endif %}" />
+            </div>
+        </div>
+
+          <div class="form-group row mb-3">
+            <label for="id_paid_month" class="col-sm-2 col-form-label">Paid Month(e.g 2017-05):</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" name="paid_month" id="id_paid_month"
+                               value="{{ loan.paid_month|date:'Y-m-d' }}" placeholder="Paid Month"/>
+            </div>
+        </div>
+
+          <div class="form-group row mb-3">
+            <label for="id_repayment_monthly_amount" class="col-sm-2 col-form-label">Repayment Monthly Amount:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="repayment_monthly_amount" id="id_repayment_monthly_amount"
+                       value="{% if loan.id %}{{ loan.repayment_monthly_amount }}{% else %}0{% endif %}" />
+            </div>
+        </div>
+
+
+       <div class="form-group row mb-3">
+            <label for="id_repayment_start_month" class="col-sm-2 col-form-label">Repayment Start Month:</label>
+            <div class="col-sm-10">
+                <input type="date" class="form-control" name="repayment_start_month" id="id_repayment_start_month"
+                               value="{{ loan.repayment_start_month|date:'Y-m-d' }}" placeholder="Repayment Start Month"/>
+            </div>
+        </div>
+
+
+         <div class="form-group row mb-3">
+            <label for="id_loan_amount_manually_cleared" class="col-sm-2 col-form-label">Loan Amount Cleared:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="loan_amount_manually_cleared" id="id_loan_amount_manually_cleared"
+                       value="{% if loan.id %}{{ loan.loan_amount_manually_cleared }}{% else %}0{% endif %}" />
+            </div>
+        </div>
+
+
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'employeefile_edit_url' employeefile.id %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+
+ <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    var dateInput = document.getElementById('id_repayment_start_month');
+
+    dateInput.addEventListener('input', function() {
+        var dateValue = new Date(this.value);
+        if (!isNaN(dateValue.getTime())) {
+            // Set the day to 1
+            dateValue.setDate(1);
+            // Format the date as yyyy-mm-dd
+            var formattedDate = dateValue.toISOString().split('T')[0];
+            // Update the input value
+            this.value = formattedDate;
+        }
+    });
+});
+
+
+     document.addEventListener('DOMContentLoaded', function() {
+    var dateInput = document.getElementById('id_paid_month');
+
+    dateInput.addEventListener('input', function() {
+        var dateValue = new Date(this.value);
+        if (!isNaN(dateValue.getTime())) {
+            // Set the day to 1
+            dateValue.setDate(1);
+            // Format the date as yyyy-mm-dd
+            var formattedDate = dateValue.toISOString().split('T')[0];
+            // Update the input value
+            this.value = formattedDate;
+        }
+    });
+});
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Upload Locations
+{% endblock %}
+
+{% block content %}
+{% if form_errors %}
+    <p>Found errors on line {{ row_count }}:<p>
+    <ul>
+    {% for field, errors in form_errors.items %}
+        {% for error in errors %}
+            <li> {{field}}: {{ error }} </li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+{% elif row_count %}
+    <p>Successfully uploaded {{ row_count }} row(s)! 🥳</p>
+{% endif %}
+
+        <form
+            action="{% url 'companycontact_import_url' %}"
+            enctype="multipart/form-data"
+            method="post"
+        >
+            {% csrf_token %}
+            {{ form }}
+            <br/>
+            <input type="submit" value="Submit">
+        </form>
+
+<a href="{% static 'documents/settings/import_companycontacts_template.csv' %}" download="import_companycontacts_template.csv">Download Import Template File</a>
+
+
+{% endblock %}

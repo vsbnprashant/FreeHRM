@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+<h1>Payment Element Id #{{ paymentelement.id}}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+<p>Code: {{ paymentelement.code }}</p>
+<p>Title: {{ paymentelement.title }}</p>
+<p>Formula: {{ paymentelement.formula }}</p>
+    <p>Order: {{ paymentelement.order }}</p>
+        <p>Version: {{ paymentelement.version }}</p>
+            <p>Origin: {{ paymentelement.origin }}</p>
+
+</div>
+
+
+{% for myversion in allversions %}
+<a  href="{% url 'paymentelement_view_url' myversion.id %}">Version {{myversion.version}} </a>
+<br/>
+{% endfor %}
+
+
+{% endblock %}

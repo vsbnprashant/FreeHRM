@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+
+{% block title %}
+Company Contacts View
+{% endblock %}
+
+{% block content %}
+
+<h2> Company Contacts </h2>
+
+ <div class="mycard">
+<a href="{% url 'companycontact_create_url' %}" class="btn btn-primary">Add New Record</a>
+     <a href="{% url 'companycontact_import_url' %}" class="btn btn-secondary">Import</a>
+        <button id="exportCsvButton" type="button" class="btn btn-light">Export</button>
+
+   {% load django_tables2 %}
+   {% render_table table %}
+      <script>
+document.getElementById('exportCsvButton').addEventListener('click', function() {
+    var currentUrl = window.location.href;  // Get the current URL
+    var newUrl = currentUrl.includes('?') ? currentUrl + '&_export=csv' : currentUrl + '?_export=csv';
+    // Redirect to the new URL
+    window.location.href = newUrl;
+});
+</script>
+ </div>
+{% endblock %}

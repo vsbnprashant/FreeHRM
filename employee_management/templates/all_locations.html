@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+<h1>Locations - List of All Locations</h1>
+{% endblock %}
+
+{% block content %}
+
+
+ <div class="mycard">
+<h1>Locations</h1>
+
+<ul>
+  {% for x in mylocations %}
+         <li onclick="window.location = 'details/{{ x.id }}'">{{ x.location }} {{ x.country }}</li>
+  {% endfor %}
+</ul>
+ </div>
+{% endblock %}

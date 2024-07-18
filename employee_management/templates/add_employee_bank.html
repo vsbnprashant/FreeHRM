@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}
+    Add Bank Account
+{% endblock %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="container mt-4">
+        <!-- Display non-field errors -->
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            {% for field in form %}
+
+               {% if field.errors %}
+                          <li>{{ field.errors }}</li>
+
+                    {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+
+        <div class="mb-4">
+            <h3>Add Bank Account for {{ employee_file }}</h3>
+        </div>
+
+<div class="form-group row mb-3">
+            <label for="id_bank_code" class="col-sm-2 col-form-label">Bank :</label>
+            <div class="col-sm-10">
+                 <select name="bank_code" id="id_bank_code" class="form-control" required>
+            {% for value, label in bank_options %}
+            <option value="{{ value }}" {% if form.bank_code.value == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_bank_account_number" class="col-sm-2 col-form-label">Bank Account Number:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="account_number" id="id_bank_account_number" required maxlength="128" value="{{ form.account_number.value|default:'' }}" placeholder="Enter Account Number">
+            </div>
+        </div>
+
+          <div class="form-group row mb-3">
+            <label for="id_currency" class="col-sm-2 col-form-label">Currency:</label>
+            <div class="col-sm-10">
+                 <select name="currency" id="id_currency" class="form-control" required>
+            {% for value, label in supported_currencies %}
+            <option value="{{ value }}" {% if form.currency.value == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+
+         <div class="form-group row mb-3">
+                    <label for="id_split_type" class="col-sm-2 col-form-label">Split Types:</label>
+                    <div class="col-sm-10">
+                        <select name="split_type" id="id_split_type" class="form-control">
+                            <option value="">None</option>
+                            {% for value, label in split_types %}
+                            <option value="{{ value }}" {% if form.split_type.value == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+          <div class="form-group row mb-3">
+            <label for="id_amount" class="col-sm-2 col-form-label">Amount:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="amount" id="id_amount" min="0"
+                       value="{% if form.id %}{{ form.amount.value }}{% else %}0{% endif %}" />
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'employeefile_edit_url' employee_file.id %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

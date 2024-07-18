@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% if companybankaccount.id %}{% url 'companybankaccount_edit_url' companybankaccount.id %}{% else %}{% url 'companybankaccount_create_url' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+         {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h3>{% if companybankaccount.id %}Update Details #{{companybankaccount.id}} {% else %}Create Company Bank Account{% endif %}</h3>
+        </div>
+
+        {% if companybankaccount.id %}
+        <div class="form-group row mb-4">
+            <label for="id_companybankaccountid" class="col-sm-2 col-form-label">Company Bank Account Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_companybankaccountid" required maxlength="20" value="{{ companybankaccount.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+
+        <div class="form-group row mb-3">
+            <label for="id_bank_name" class="col-sm-2 col-form-label">Bank Name:</label>
+            <div class="col-sm-10">
+                 <select name="bank_name" id="id_bank_name" class="form-control" required>
+            {% for value, label in bank_options %}
+            <option value="{{ value }}" {% if companybankaccount.bank_name == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+
+
+          <div class="form-group row mb-3">
+            <label for="id_branch" class="col-sm-2 col-form-label">Branch:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="branch" id="id_branch" required maxlength="128"
+                       value="{{ companybankaccount.branch }}" placeholder="Bank Branch"/>
+            </div>
+        </div>
+
+                    <div class="form-group row mb-3">
+            <label for="id_account_number" class="col-sm-2 col-form-label">Account Number:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="account_number" id="id_account_number" required maxlength="128"
+                       value="{{ companybankaccount.account_number }}" placeholder="Bank Account Number"/>
+            </div>
+        </div>
+
+
+                    <div class="form-group row mb-3">
+            <label for="id_iban" class="col-sm-2 col-form-label">IBAN:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="iban" id="id_iban" required maxlength="128"
+                       value="{{ companybankaccount.iban }}" placeholder="IBAN"/>
+            </div>
+        </div>
+
+              <div class="form-group row mb-3">
+            <label for="id_code" class="col-sm-2 col-form-label">Code:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="code" id="id_code" required maxlength="32"
+                       value="{{ companybankaccount.code }}" placeholder="Code"/>
+            </div>
+        </div>
+
+
+                <div class="form-group row mb-3">
+            <label for="id_bank_name" class="col-sm-2 col-form-label">Currency:</label>
+            <div class="col-sm-10">
+                 <select name="currency" id="id_currency" class="form-control" required>
+            {% for value, label in supported_currencies %}
+            <option value="{{ value }}" {% if companybankaccount.currency == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+
+
+                         <div class="form-group row mb-3">
+            <label for="id_default_bank" class="col-sm-2 col-form-label">Default Bank:</label>
+            <div class="col-sm-10">
+                <input type="checkbox" class="form-control form-check-input" name="default_bank" id="id_default_bank" role="switch"
+                {% if companybankaccount.id and companybankaccount.default_bank %}checked{% endif %}
+                />
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group row mb-4">
+            <div class="col-sm-10 offset-sm-2">
+                {% if companybankaccount.id and perms.settings.change_companybankaccount %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.settings.add_companycontact %}
+                <button type="submit" class="btn btn-success">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+ Employee Management
+{% endblock %}
+
+{% block content %}
+<div class="main container">
+  <h1 class="mb-4">Employee Management</h1>
+  <div class="row">
+    <!-- Card for the count of active employees -->
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-user-check"></i> Active Employees</h5>
+          <p class="card-text">We currently have {{ active_employee_count }} active employees.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- second row -->
+   <div class="row">
+
+
+    {% if perms.employee_management.view_location %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> Locations</h5>
+          <p class="card-text">Check out all our locations.</p>
+          <a href="{% url 'locations_list' %}" class="btn btn-primary">View Locations</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if perms.employee_management.view_employeefile %}
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-users"></i> Employees</h5>
+          <p class="card-text">Check out all our employees.</p>
+          <a href="{% url 'employeefile_list_url' %}" class="btn btn-primary">View Employees</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

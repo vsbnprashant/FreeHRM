@@ -1,0 +1,816 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" id="empform" action="{% if employeefile.id %}{% url 'employeefile_edit_url' employeefile.id %}{% else %}{% url 'employeefile_create_url' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+
+
+
+
+        <div class="mb-4">
+            <h3>{% if employeefile.last_name %}{{employeefile.last_name}}, {{employeefile.first_name}} {% else %}Create Employee File{% endif %}</h3>
+        </div>
+
+        {% if employeefile.id %}
+        <div class="form-group row mb-4">
+            <label for="id_employeefileid" class="col-sm-2 col-form-label">Employee Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_employeefileid" required maxlength="20" value="{{ employeefile.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="formTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab" aria-controls="personal" aria-selected="true">Personal</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="employment-tab" data-bs-toggle="tab" href="#employment" role="tab" aria-controls="employment" aria-selected="false">Employment</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="salary-tab" data-bs-toggle="tab" href="#salary" role="tab" aria-controls="salary" aria-selected="false">Salary</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="version-tab" data-bs-toggle="tab" href="#version" role="tab" aria-controls="version" aria-selected="false">Version</a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link" id="bank-accounts-tab" data-bs-toggle="tab" href="#bank-accounts" role="tab" aria-controls="bank-accounts" aria-selected="false">Bank Accounts</a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link" id="leave-balances-tab" data-bs-toggle="tab" href="#leave-balances" role="tab" aria-controls="leave-balances" aria-selected="false">Leave Balances</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="loans-tab" data-bs-toggle="tab" href="#loans" role="tab" aria-controls="loans" aria-selected="false">Loans</a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link" id="payroll-groups-tab" data-bs-toggle="tab" href="#payroll-groups" role="tab" aria-controls="payroll-groups" aria-selected="false">Payroll Groups</a>
+            </li>
+        </ul>
+
+
+
+        <!---- Section 1 PERSONAL -->
+
+        <!-- Tabs Content -->
+        <div class="tab-content" id="formTabsContent" style="margin: 2em;">
+
+
+            <!-- Section 1 PERSONAL -->
+            <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                <!-- Add your personal form fields here -->
+
+                <!-- Last Name -->
+                <div class="form-group row mb-3">
+                    <label for="id_last_name" class="col-sm-2 col-form-label">Last Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="last_name" id="id_last_name" required maxlength="40"
+                               value="{{ employeefile.last_name }}" placeholder="Doe"/>
+                    </div>
+                </div>
+
+
+                <!-- First Name -->
+                <div class="form-group row mb-3">
+                    <label for="id_first_name" class="col-sm-2 col-form-label">First Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="first_name" id="id_first_name" required maxlength="40"
+                               value="{{ employeefile.first_name }}" placeholder="John"/>
+                    </div>
+                </div>
+
+                <!-- Other Names -->
+                <div class="form-group row mb-3">
+                    <label for="id_other_names" class="col-sm-2 col-form-label">Other Names:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="other_names" id="id_other_names" maxlength="100"
+                               value="{{ employeefile.other_names }}" placeholder="Middle names if any"/>
+                    </div>
+                </div>
+
+                <!-- Maiden Name -->
+                <div class="form-group row mb-3">
+                    <label for="id_maiden_name" class="col-sm-2 col-form-label">Maiden Name:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="maiden_name" id="id_maiden_name" maxlength="50"
+                               value="{{ employeefile.maiden_name }}" placeholder="Maiden Name"/>
+                    </div>
+                </div>
+
+                <!-- NIC -->
+                <div class="form-group row mb-3">
+                    <label for="id_nic" class="col-sm-2 col-form-label">NIC/SSN:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="nic" id="id_nic" required maxlength="20"
+                               value="{{ employeefile.nic }}" placeholder="XXXXX"/>
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group row mb-3">
+                    <label for="id_gender" class="col-sm-2 col-form-label">Gender:</label>
+                    <div class="col-sm-10">
+                        <select name="gender" id="id_gender" class="form-control" required>
+                            {% for value, label in genders %}
+                            <option value="{{ value }}" {% if employeefile.gender == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Employee Code -->
+                <div class="form-group row mb-3">
+                    <label for="id_employee_code" class="col-sm-2 col-form-label">Employee Code:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="employee_code" id="id_employee_code" required maxlength="6"
+                               value="{{ employeefile.employee_code }}" placeholder="E12345"/>
+                    </div>
+                </div>
+
+                <!-- Badge Access Control Number -->
+                <div class="form-group row mb-3">
+                    <label for="id_badge_access_control_number" class="col-sm-2 col-form-label">Badge Number:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="badge_access_control_number" id="id_badge_access_control_number" maxlength="25"
+                               value="{{ employeefile.badge_access_control_number }}" placeholder="1234567890"/>
+                    </div>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="form-group row mb-3">
+                    <label for="id_mobile_number" class="col-sm-2 col-form-label">Mobile Number:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="mobile_number" id="id_mobile_number" maxlength="15"
+                               value="{{ employeefile.mobile_number }}" placeholder="Mobile Number"/>
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group row mb-3">
+                    <label for="id_phone" class="col-sm-2 col-form-label">Phone Number:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="phone" id="id_phone" maxlength="15"
+                               value="{{ employeefile.phone }}" placeholder="Phone Number"/>
+                    </div>
+                </div>
+
+
+                <!-- Postcode -->
+                <div class="form-group row mb-3">
+                    <label for="id_postcode" class="col-sm-2 col-form-label">Post Code:</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" name="postcode" id="id_postcode" min="0"
+                               value="{{ employeefile.postcode }}" />
+
+                    </div>
+                </div>
+
+
+            </div>
+            <!---- End of Section 1 PERSONAL -->
+
+
+
+            <!---- Section 2 EMPLOYMENT -->
+
+            <div class="tab-pane fade" id="employment" role="tabpanel" aria-labelledby="employment-tab">
+                <!-- Add your employment form fields here -->
+
+                <!-- Employment Type -->
+                <div class="form-group row mb-3">
+                    <label for="id_employment_type" class="col-sm-2 col-form-label">Employment Type:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="employment_type" id="id_employment_type" required>
+                            <option value="">Select Employment Type</option>
+                            {% for value, label in employmenttypes %}
+                            <option value="{{ value }}" {% if employeefile.employment_type == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Joining Date -->
+                <div class="form-group row mb-3">
+                    <label for="id_date_joined" class="col-sm-2 col-form-label">Joining Date:</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="date_joined" id="id_date_joined" required
+                               value="{{ employeefile.date_joined|date:'Y-m-d' }}" placeholder="Joining Date"/>
+                    </div>
+                </div>
+
+                <!-- Post -->
+                <div class="form-group row mb-3">
+                    <label for="id_post" class="col-sm-2 col-form-label">Post:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="post" id="id_post" maxlength="50" required
+                               value="{{ employeefile.post }}" placeholder="e.g. Payroll Assistant"/>
+                    </div>
+                </div>
+
+
+                <!-- In Current Position Since -->
+                <div class="form-group row mb-3">
+                    <label for="id_in_current_position_since" class="col-sm-2 col-form-label">In Current Position Since:</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="in_current_position_since" id="id_in_current_position_since" required
+                               value="{{ employeefile.in_current_position_since|date:'Y-m-d' }}" placeholder="In Current Position Since"/>
+                    </div>
+                </div>
+
+
+                <!-- Working Calendar -->
+
+                <div class="form-group row mb-4">
+                    <label for="id_workingcalendar" class="col-sm-2 col-form-label">Working Calendar:</label>
+                    <div class="col-sm-10">
+                        <select name="calendar" id="id_workingcalendar" class="form-control" required >
+                            <option value="">None</option>
+                            {% for calendar in calendars %}
+                            <option value="{{ calendar.id }}"
+                                    {% if employeefile.calendar and employeefile.calendar.id == calendar.id %}selected{% endif %}>
+                                {{ calendar.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <!-- Department -->
+
+                <div class="form-group row mb-4">
+                    <label for="id_department" class="col-sm-2 col-form-label">Department:</label>
+                    <div class="col-sm-10">
+                        <select name="department" id="id_department" class="form-control" required>
+                            <option value="">None</option>
+                            {% for department in departments %}
+                            <option value="{{ department.id }}"
+                            {% if employeefile.department and employeefile.department.id == department.id %}selected{% endif %}
+                            >{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+                <!-- Office Site -->
+                <div class="form-group row mb-3">
+                    <label for="id_office_site" class="col-sm-2 col-form-label">Office Site:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="office_site" id="id_office_site" maxlength="20"
+                               value="{{ employeefile.office_site }}" placeholder="Office Site"/>
+                    </div>
+                </div>
+
+                <!-- Departure Date -->
+                <div class="form-group row mb-3">
+                    <label for="id_departure_date" class="col-sm-2 col-form-label">Departure Date:</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="departure_date" id="id_departure_date"
+                               value="{{ employeefile.departure_date|date:'Y-m-d' }}" placeholder="Departure Date"/>
+                    </div>
+                </div>
+
+                <!-- Reason of Departure -->
+                <div class="form-group row mb-3">
+                    <label for="id_reason_of_departure" class="col-sm-2 col-form-label">Reason of Departure:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="reason_of_departure" id="id_reason_of_departure" maxlength="255"
+                               value="{{ employeefile.reason_of_departure }}" placeholder="Reason of Departure"/>
+                    </div>
+                </div>
+
+                <!-- Suspension Date -->
+                <div class="form-group row mb-3">
+                    <label for="id_suspension_date" class="col-sm-2 col-form-label">Suspension Date:</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" name="suspension_date" id="id_suspension_date"
+                               value="{{ employeefile.suspension_date|date:'Y-m-d' }}" placeholder="Suspension Date"/>
+                    </div>
+                </div>
+
+                <!-- Reason for Suspension -->
+                <div class="form-group row mb-3">
+                    <label for="id_reason_for_suspension" class="col-sm-2 col-form-label">Reason for Suspension:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="reason_for_suspension" id="id_reason_for_suspension" maxlength="255"
+                               value="{{ employeefile.reason_for_suspension }}" placeholder="Reason for Suspension"/>
+                    </div>
+                </div>
+
+
+
+                <!-- working calendar overrides -->
+
+                <!-- Days inputs focused on working days and overtime -->
+                <div class="container px-4" style="margin: 20px; margin-top: 50px; margin-bottom: 50px;">
+                    <div class="form-group row mb-3">
+                        <p class="h5">Normal Working Days</p>
+                    </div>
+
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-2 col-form-label">Day</label>
+                        <div class="col-sm-2">Is a working day?</div>
+                        <div class="col-sm-2">Overtime</div>
+                    </div>
+
+                    {% for day in days %}
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-2 col-form-label">{{ day }}:</label>
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="form-check-input"
+                                   name="{{ day|lower }}_working"
+                                   id="id_{{ day|lower }}_working"
+                                   {% if employeefile.id and employeefile|is_working_checked:day %}checked{% endif %}>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="form-check-input"
+                                   name="{{ day|lower }}_overtime"
+                                   id="id_{{ day|lower }}_overtime"
+                                   {% if employeefile.id and employeefile|is_overtime_checked:day %}checked{% endif %}>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                <!-- working calendar overrides end-->
+
+
+
+
+
+                <!-- Active Employee -->
+                <div class="form-group row mb-3">
+                    <label for="id_active_employee" class="col-sm-2 col-form-label">Active Employee:</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" class="form-check-input" name="active_employee" id="id_active_employee"
+                               {% if employeefile.active_employee %}checked{% endif %}>
+                    </div>
+                </div>
+
+
+            </div>
+            <!---- End of Section 2 EMPLOYMENT -->
+
+
+            <!---- Section 3 SALARY -->
+
+            <!-- Section 3 SALARY -->
+            <div class="tab-pane fade" id="salary" role="tabpanel" aria-labelledby="salary-tab">
+
+
+                <!-- Salary Payment -->
+                <div class="form-group row mb-3">
+                    <label class="col-sm-2 col-form-label">Salary Payment:</label>
+
+                    <div class="col-sm-10">
+                        {% for value, label in salarypaymentperiods %}
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="salary_payment_interval" id="id_salary_calculations_{{ value }}" value="{{ value }}"
+                                   {% if employeefile.salary_payment_interval == value %}checked{% endif %}
+                            />
+                            <label for="id_salary_calculations_{{ value }}" class="form-check-label">{{ label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Contributes PAYE -->
+                <div class="form-group row mb-3">
+                    <label for="id_paye_income_tax_enabled" class="col-sm-2 col-form-label">Contributes PAYE:</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" class="form-check-input" name="paye_income_tax_enabled" id="id_paye_income_tax_enabled"
+                               {% if employeefile.paye_income_tax_enabled %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <!-- Tax Acc/Identification Number (TAN) -->
+                <div class="form-group row mb-3">
+                    <label for="id_tan" class="col-sm-2 col-form-label">Tax Acc/Identification Number:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="tan" id="id_tan" maxlength="32" required
+                               value="{{ employeefile.tan }}" placeholder="Tax Acc/Identification Number"/>
+                    </div>
+                </div>
+
+                <!-- Pension Fund Number -->
+                <div class="form-group row mb-3">
+                    <label for="id_pension_fund_number" class="col-sm-2 col-form-label">Pension Fund Number:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="pension_fund_number" id="id_pension_fund_number" maxlength="32"
+                               value="{{ employeefile.pension_fund_number }}" placeholder="Pension Fund Number" required/>
+                    </div>
+                </div>
+
+                <!-- NPF/NSF Contribution Enabled -->
+                <div class="form-group row mb-3">
+                    <label for="id_npf_nsf_contribution_enabled" class="col-sm-2 col-form-label">NPF/NSF Contribution Enabled:</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" class="form-check-input" name="npf_nsf_contribution_enabled" id="id_npf_nsf_contribution_enabled"
+                               {% if employeefile.npf_nsf_contribution_enabled %}checked{% endif %}>
+                    </div>
+                </div>
+
+                <!-- Contribution Code -->
+                <div class="form-group row mb-3">
+                    <label for="id_contribution_code" class="col-sm-2 col-form-label">Contribution Code:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="contribution_code" id="id_contribution_code" maxlength="32"
+                               value="{{ employeefile.contribution_code }}" placeholder="Contribution Code"/>
+                    </div>
+                </div>
+
+                <!-- Paid by Bank Transfer -->
+                <div class="form-group row mb-3">
+                    <label for="id_paid_by_bank_transfer" class="col-sm-2 col-form-label">Paid by Bank Transfer:</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" class="form-check-input" name="paid_by_bank_transfer" id="id_paid_by_bank_transfer"
+                               {% if employeefile.paid_by_bank_transfer %}checked{% endif %}>
+                    </div>
+                </div>
+
+
+                <div class="form-group row mb-3">
+                    <label for="id_contribution_code" class="col-sm-2 col-form-label">Contribution Code:</label>
+                    <div class="col-sm-10">
+                        <select name="contribution_code" id="id_contribution_code" class="form-control" required>
+                            {% for value, label in contribution_codes %}
+                            <option value="{{ value }}" {% if employeefile.contribution_code == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <!---- End of Section 3 SALARY -->
+
+
+            <!-- Section 4 Bank Accounts -->
+             <div class="tab-pane fade" id="bank-accounts" role="tabpanel" aria-labelledby="bank-accounts-tab">
+            <h3>Bank Accounts</h3>
+                    {% if employeefile.id  %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Bank Code</th>
+                        <th>Account Number</th>
+                        <th>Currency</th>
+                        <th>Split Type</th>
+                        <th>Amount Destined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bank in employee_banks %}
+                    <tr>
+                        <td>{{ bank.bank_code }}</td>
+                        <td>{{ bank.account_number }}</td>
+                        <td>{{ bank.currency }}</td>
+                        <td>{{ bank.split_type }}</td>
+                        <td>{{ bank.amount }}</td>
+                        <td>
+                            {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+                            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"
+                                    href="{% url 'delete_employee_bank' bank.id %}" class="btn btn-danger">Remove</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                          {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+
+                 <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"  href="{% url 'add_employee_bank' employeefile.id %}" class="btn btn-primary">Add Bank Account</a>
+                 {%endif%}
+
+                   {% else %}
+               Please save the form to enable addition of Bank Accounts
+                {% endif %}
+        </div>
+
+
+            <!-- End of Section 4 Bank Accounts -->
+
+
+            <!-- Section 5 Leaves -->
+             <div class="tab-pane fade" id="leave-balances" role="tabpanel" aria-labelledby="leave-balances-tab">
+            <h3>Leave Balances</h3>
+                  {% if employeefile.id  %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Leave Code</th>
+                        <th>Allowed</th>
+                        <th>Rollover</th>
+                        <th>Taken</th>
+                        <th>Available</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leave_balances %}
+                    <tr>
+                        <td>{{ leave.leave_code }}</td>
+                        <td>{{ leave.amount }}</td>
+                        <td>{{ leave.rollover }}</td>
+                        <td>{{ leave.taken }}</td>
+                        <td>{{ leave.available }}</td>
+                        <td>
+                            {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+                            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"
+                               href="{% url 'edit_employee_leave_balance' leave.id %}" class="btn btn-primary">Edit</a>
+                            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"
+                               href="{% url 'delete_employee_leave_balance' leave.id %}" class="btn btn-danger">Remove</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                  {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"
+               href="{% url 'add_employee_leave_balance' employeefile.id %}" class="btn btn-primary">Add Leave Balance</a>
+                  {% endif %}
+                  {% else %}
+               Please save the form to enable addition of Leave Details
+                {% endif %}
+        </div>
+            <!-- End of Section 5 Leaves -->
+
+
+
+            <!-- Section 6 Loans -->
+             <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
+            <h3>Loans</h3>
+                        {% if employeefile.id  %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Loan Code</th>
+                        <th>Loan Amount</th>
+                        <th>Loan Charges</th>
+                        <th>Paid Month</th>
+                        <th>Repayment Monthly Amount</th>
+                        <th>Repayment Start Month</th>
+                        <th>Manually Cleared Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                        <td>{{ loan.employee_loan_code }}</td>
+                        <td>{{ loan.loan_amount }}</td>
+                        <td>{{ loan.loan_charges }}</td>
+                        <td>{{ loan.paid_month }}</td>
+                        <td>{{ loan.repayment_monthly_amount }}</td>
+                        <td>{{ loan.repayment_start_month }}</td>
+                        <td>{{ loan.loan_amount_manually_cleared }}</td>
+                        <td>
+                            {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+                            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');" href="{% url 'edit_employee_loan' loan.id %}" class="btn btn-primary">Edit</a>
+                            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');" href="{% url 'delete_employee_loan' loan.id %}" class="btn btn-danger">Remove</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                  {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"
+               href="{% url 'add_employee_loan' employeefile.id %}" class="btn btn-primary">Add Loan</a>
+                    {% endif %}
+                  {% else %}
+               Please save the form to enable addition of Loan Details
+                {% endif %}
+        </div>
+
+            <!-- End of Section 6 Loans -->
+
+
+            <!-- Section 7 Payroll groups -->
+             <div class="tab-pane fade" id="payroll-groups" role="tabpanel" aria-labelledby="payroll-groups-tab">
+            <h3>Payroll Groups</h3>
+                   {% if employeefile.id  %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Payroll Group</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payroll_group in payroll_groups %}
+                    <tr>
+                        <td>{{ payroll_group.payrollGroup.name }}</td>
+                        <td>
+                             {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+                            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');" href="{% url 'delete_employee_payroll_group' payroll_group.id %}" class="btn btn-danger">Remove</a>
+                             {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                    {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+            <a onclick="return confirm('You will be leaving the Employee File and losing your changes if not saved. Click OK to continue and Cancel to remain on the Employee File');"
+               href="{% url 'add_employee_payroll_group' employeefile.id %}" class="btn btn-primary">Add Payroll Group</a>
+                 {% endif %}
+                  {% else %}
+               Please save the form to enable addition of Payroll Groups Details
+                {% endif %}
+        </div>
+
+            <!-- End of Payroll groups -->
+
+
+            <!---- Section last VERSION -->
+
+            <div class="tab-pane fade" id="version" role="tabpanel" aria-labelledby="version-tab">
+
+
+                <div class="form-group row mb-4">
+                    <label for="id_version" class="col-sm-2 col-form-label">
+                        Version  :
+                     </label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" name="version" id="id_version" required readonly
+                               value="{{ employeefile.version}}" />
+                    </div>
+                </div>
+
+
+
+
+                {% if employeefile.id %}
+                {% for myversion in allversions %}
+                     {% if myversion.is_draft %}
+                <a  href="{% url 'employeefile_edit_url' myversion.id %}" class="btn btn-danger">Draft Version {{myversion.version}} </a>
+
+                    {% else %}
+                 <a  href="{% url 'employeefile_edit_url' myversion.id %}" class="btn btn-outline-success">Validated Version {{myversion.version}} </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% endif %}
+
+            </div>
+            <!-- origin -->
+
+
+            <!---- End of Section last VERSION -->
+
+
+        </div>
+
+
+        <div class="form-group row mb-4">
+            <div class="col-sm-10 offset-sm-2">
+                <!-- You can always save as Draft -->
+                {% if not employeefile.is_draft and perms.employee_management.add_employeefile and is_latest_non_draft_version %}
+               <a href="{% url 'employeefile_create_new_version_url' employeefile.id %}" class="btn btn-primary">Create New Version / Open Existing Draft</a>
+                {% endif %}
+
+                <!-- If Draft version you can finalize it and set draft to false -->
+                {% if employeefile.is_draft and perms.employee_management.change_employeefile %}
+                <button type="submit" id="draftButton" class="btn btn-success">Save Draft</button>
+                  {% if employeefile.id %}
+                <button type="submit" class="btn btn-secondary" id="submitButton" >Finalize Version</button>
+
+                <a onclick="return confirm(\'Are you sure you want to delete this Draft?\');" href="{% url 'employeefile_delete_single_url' employeefile.id %}" class="btn btn-danger">Delete Draft</i></a>
+
+                    {% endif %}
+                {% endif %}
+            </div>
+
+
+
+
+        </div>
+
+
+    </div>
+
+    <!-- Hidden Fields -->
+     <!-- Hidden input to determine if saving as draft or not -->
+    <input type="hidden" name="is_draft" id="draftField" value="{{ employeefile.is_draft }}">
+   <!-- <input type="hidden" name="finalize_version" id="finalizeField" value="false">-->
+
+</form>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        //Draft button
+   var draftButton = document.getElementById('draftButton');
+    if (draftButton) {
+        draftButton.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent the form from submitting
+            var draftField = document.getElementById('draftField');
+            if (draftField) {
+                draftField.value = 'true';
+                console.log(draftField.value);
+            }
+            var form = document.getElementById('empform');
+            if (form) {
+                form.noValidate = true; // Disable validation
+                form.submit();
+            }
+        });
+    }
+
+        // Listen for form submission via the submit button click
+        document.getElementById('submitButton').addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent the form from submitting
+            //this is not a draft submission
+            document.getElementById('draftField').value = 'false';
+
+            let firstInvalidTab = null;
+
+            // Find all form fields (input, select, textarea)
+            const formFields = document.querySelectorAll('#empform input, #empform select, #empform textarea');
+
+            // Add event listeners to each form field to remove the 'invalid-field' class when corrected
+            formFields.forEach(function (input) {
+                // Add event listeners for changes to the field
+                input.addEventListener('input', function () {
+                    if (input.checkValidity()) {
+                        input.classList.remove('invalid-field');
+                    }
+                });
+            });
+
+            // Find all invalid fields at the time of submission
+            const invalidFields = document.querySelectorAll('#empform input:invalid, #empform select:invalid, #empform textarea:invalid');
+
+            // Iterate through each invalid field
+            invalidFields.forEach(function (input) {
+                // Add the custom CSS class to highlight invalid fields
+                input.classList.add('invalid-field');
+
+                // Find the tab pane that the field is inside and get its ID
+                const closestPane = input.closest('.tab-pane');
+                const paneId = closestPane.getAttribute('id');
+
+                // Determine the first tab pane containing an invalid field
+                if (!firstInvalidTab) {
+                    firstInvalidTab = paneId;
+                }
+            });
+
+            // Switch to the first tab containing an invalid field
+            if (firstInvalidTab) {
+                const navLink = document.querySelector(`.nav a[href="#${firstInvalidTab}"]`);
+                if (navLink) {
+                    new bootstrap.Tab(navLink).show();
+                }
+            } else {
+                // If the form is valid, submit it
+                const form = document.getElementById('empform');
+                if (form.checkValidity()) {
+                console.log('Submitted!!')
+                    form.submit();
+                }
+            }
+        });
+    });
+
+
+</script>
+
+{% endblock %}

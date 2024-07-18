@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% url 'edit_company_timesheets_settings_url' %}">
+    {% csrf_token %}
+    <div class="container mt-4">
+         {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h3>Manage Company Timesheets Settings</h3>
+        </div>
+
+
+
+        <div class="form-group row mb-3">
+             &nbsp;
+         </div>
+            <div class="form-group row mb-3">
+            <p class="h5">Timesheets</p>
+            </div>
+
+                 <div class="form-group row mb-3">
+            <label for="id_allow_time_input_from_employee" class="col-sm-2 col-form-label">Allow Time Input from Employee<small>(via mobile application)</small>:</label>
+            <div class="col-sm-10">
+                <input type="checkbox" class="form-control form-check-input" name="allow_time_input_from_employee" id="id_allow_time_input_from_employee" role="switch"
+                {% if companytimesheets.allow_time_input_from_employee %}checked{% endif %}
+                />
+            </div>
+        </div>
+
+
+
+
+        <!-- Lateness -->
+
+         <div class="form-group row mb-3">
+              &nbsp;
+         </div>
+
+             <div class="form-group row mb-3">
+            <p class="h5">Lateness</p>
+            </div>
+
+
+                         <div class="form-group row mb-3">
+            <label for="id_automatic_lateness" class="col-sm-2 col-form-label">Automatic Lateness:</label>
+            <div class="col-sm-10">
+                <input type="checkbox" class="form-control form-check-input" name="automatic_lateness" id="id_automatic_lateness" role="switch"
+                {% if companytimesheets.automatic_lateness %}checked{% endif %}
+                />
+            </div>
+        </div>
+
+
+
+            <div class="form-group row mb-3">
+            <label for="id_lateness_field" class="col-sm-2 col-form-label">Lateness Field:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="lateness_field" id="id_lateness_field" required maxlength="255"
+                       value="{{ companytimesheets.lateness_field }}" placeholder="Company Timesheets"/>
+            </div>
+        </div>
+
+
+
+         <div class="form-group row mb-3">
+            <label for="id_lateness_calculation_type" class="col-sm-2 col-form-label">Lateness Calculation Type:</label>
+            <div class="col-sm-10">
+                 <select name="lateness_calculation_type" id="id_lateness_calculation_type" class="form-control" required>
+            {% for value, label in timeunits %}
+            <option value="{{ value }}" {% if companytimesheets.lateness_calculation_type == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+
+
+
+
+<div class="form-group row mb-3">
+    <label for="id_lateness_absence_field" class="col-sm-2 col-form-label">Lateness Absence Field:</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" name="lateness_absence_field" id="id_lateness_absence_field" required maxlength="32"
+               value="{{ companytimesheets.lateness_absence_field }}" placeholder="Lateness Absence Field"/>
+    </div>
+</div>
+
+
+<!-- overtime -->
+         <div class="form-group row mb-3">
+             &nbsp;
+         </div>
+            <div class="form-group row mb-3">
+            <p class="h5">Overtime</p>
+            </div>
+
+<div class="form-group row mb-3">
+    <label for="id_automatic_overtime" class="col-sm-2 col-form-label">Automatic Overtime:</label>
+    <div class="col-sm-10">
+        <input type="checkbox" class="form-control form-check-input" name="automatic_overtime" id="id_automatic_overtime"
+               {% if companytimesheets.automatic_overtime %}checked{% endif %}/>
+    </div>
+</div>
+
+<div class="form-group row mb-3">
+    <label for="id_overtime_field" class="col-sm-2 col-form-label">Overtime Field:</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" name="overtime_field" id="id_overtime_field" required maxlength="32"
+               value="{{ companytimesheets.overtime_field }}" placeholder="Overtime Field"/>
+    </div>
+</div>
+
+
+          <div class="form-group row mb-3">
+            <label for="id_overtime_calculation_type" class="col-sm-2 col-form-label">Overtime Calculation Type:</label>
+            <div class="col-sm-10">
+                 <select name="overtime_calculation_type" id="id_overtime_calculation_type" class="form-control" required>
+            {% for value, label in timeunits %}
+            <option value="{{ value }}" {% if companytimesheets.overtime_calculation_type == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+
+
+         <div class="form-group row mb-3">
+            <label for="id_overtime_calculation_option" class="col-sm-2 col-form-label">Overtime Calculation Option:</label>
+            <div class="col-sm-10">
+                 <select name="overtime_calculation_option" id="id_overtime_calculation_option" class="form-control" required>
+            {% for value, label in overtimecalculationoptions %}
+            <option value="{{ value }}" {% if companytimesheets.overtime_calculation_option == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+            </div>
+        </div>
+
+
+
+ <div class="form-group row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                {% if perms.settings.change_companytimesheets %}
+                <button type="submit" class="btn btn-success">Save Timesheet settings</button>
+                {% endif %}
+            </div>
+        </div>
+
+
+        </div>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+<h1>{{ mylocation.location }} {{ mylocation.country }}</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+<p>Location: {{ mylocation.location }}</p>
+<p>Country: {{ mylocation.country }}</p>
+<p>Country: {{ mylocation.cost_center }}</p>
+</div>
+
+
+{% endblock %}

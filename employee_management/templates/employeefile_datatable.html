@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+{% load django_bootstrap5 %}
+
+{% block title %}
+Employees View
+{% endblock %}
+
+{% block content %}
+
+<h2> Employees </h2>
+
+ <div class="mycard">
+<a href="{% url 'employeefile_create_url' %}" class="btn btn-primary">Add New Record</a>
+          <a href="{% url 'employeefile_import_url' %}" class="btn btn-secondary">Import</a>
+        <button id="exportCsvButton" type="button" class="btn btn-light">Export</button>
+       <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilterSection"
+            aria-controls="offcanvasFilterSection">
+        <i class="bi bi-filter"></i>
+    </button>
+      <a href="{% url 'employeefile_list_url' %}" class="btn btn-info">  <i class="bi bi-escape"></i></a>
+
+
+   {% load django_tables2 %}
+
+
+ <div class="offcanvas offcanvas-start" id="offcanvasFilterSection" tabindex="-1" aria-labelledby="offcanvasLabel" data-bs-backdrop="false">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabel">Add Filters</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            {% if filter %}
+                <form action="" method="get" class="form form-inline">
+                    {% bootstrap_form filter.form layout='inline' %}
+                    {% bootstrap_button 'filter' %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+   {% render_table table %}
+      <script>
+document.getElementById('exportCsvButton').addEventListener('click', function() {
+    var currentUrl = window.location.href;  // Get the current URL
+    var newUrl = currentUrl.includes('?') ? currentUrl + '&_export=csv' : currentUrl + '?_export=csv';
+    // Redirect to the new URL
+    window.location.href = newUrl;
+});
+</script>
+ </div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% if department.id %}{% url 'department_edit_url' department.id %}{% else %}{% url 'department_create_url' %}{% endif %}" class="post-form">
+    {% csrf_token %}
+    <div class="container mt-4">
+        <div class="mb-4">
+            <h3>{% if department.id %}Update Details #{{department.id}} {% else %}Create Department Group{% endif %}</h3>
+        </div>
+
+        {% if department.id %}
+        <div class="form-group row mb-4">
+            <label for="id_departmentid" class="col-sm-2 col-form-label">Department Id:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="id" id="id_departmentid" required maxlength="20" value="{{ department.id }}" readonly />
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group row mb-4">
+            <label for="id_name" class="col-sm-2 col-form-label">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name" id="id_name" required maxlength="64" value="{{ department.name }}" placeholder="Enter department name">
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_description" class="col-sm-2 col-form-label">Description:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" name="description" id="id_description" maxlength="255" placeholder="Provide a detailed description">{{ department.description }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <label for="id_parent_department" class="col-sm-2 col-form-label">Parent Department:</label>
+            <div class="col-sm-10">
+                <select name="parent_department" id="id_parent_department" class="form-control">
+                     <option value="">None</option>  <!-- Added option for no parent department -->
+                    {% for parent in parents %}
+                    <option value="{{ parent.id }}"
+                     {% if department.parent_department and department.parent_department.id == parent.id %}selected{% endif %}>
+                        {{ parent.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-4">
+            <div class="col-sm-10 offset-sm-2">
+                {% if department.id and perms.settings.change_department %}
+                <button type="submit" class="btn btn-success">Update</button>
+                {% elif perms.settings.add_department %}
+                <button type="submit" class="btn btn-success">Create</button>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                <li>{{ field.label }}:
+                    <ul>
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}
