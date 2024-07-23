@@ -133,3 +133,9 @@ For advancement developments, please visit the website: https://freehrm.com/
 * https://pypi.org/project/django-bootstrap-v5/
 * https://github.com/clearspark/django-monthfield
 
+
+---
+
+<h2>Website</h2>
+
+For more information please visit the website: https://freehrm.com/
