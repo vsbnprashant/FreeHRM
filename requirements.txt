@@ -1,0 +1,8 @@
+Django>=3.2, <4.0
+django-bootstrap-v5
+django-filter
+django-tables2
+django-dynamic-breadcrumbs
+django-bootstrap5
+tablib
+whitenoise

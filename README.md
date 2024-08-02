@@ -1,4 +1,4 @@
-<h1>Free HRMS</h1>
+<h1>FreeHRM</h1>
 
 <h2> Introduction </h2>
 
@@ -85,6 +85,7 @@ Below are the instructions you can place in your `README.md` for users to instal
    python manage.py loaddata db.json
    ```
 
+
 ### Running the Project
 
 1. **Start the Development Server**
@@ -97,7 +98,7 @@ Below are the instructions you can place in your `README.md` for users to instal
 
 2. **Access the Application**
 
-   Once the server is running, you can access the application by navigating to `http://127.0.0.1:8000/` in your web browser.
+   Once the server is running, you can access the application by navigating to `http://127.0.0.1:8000/` in your web browser. The login page should appear but may only be accessible after creating a superuser account as described below.
 
 ### Additional Information
 
@@ -139,3 +140,14 @@ For advancement developments, please visit the website: https://freehrm.com/
 <h2>Website</h2>
 
 For more information please visit the website: https://freehrm.com/
+
+
+---
+
+<h2> Troubleshooting Installation Issues </h2>
+
+If ever you encounter the error 'sqlite3.IntegrityError: UNIQUE constraint failed: django_content_type.app_label, django_content_type.model' after running the command `python manage.py loaddata db.json`, run the following command:
+
+```bash
+python manage.py clear_contenttypes
+```
